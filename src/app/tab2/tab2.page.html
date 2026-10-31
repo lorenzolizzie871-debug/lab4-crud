@@ -1,0 +1,157 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Students List
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-refresher
+    slot="fixed"
+    (ionRefresh)="refreshStudents($event)">
+
+    <ion-refresher-content></ion-refresher-content>
+
+  </ion-refresher>
+
+  <ion-searchbar
+    [(ngModel)]="searchText"
+    (ionInput)="filterStudents()"
+    placeholder="Search student..."
+    animated="true">
+  </ion-searchbar>
+
+  <ion-segment
+    [(ngModel)]="selectedCourse"
+    (ionChange)="filterStudents()"
+    scrollable="true"
+    value="All">
+
+    <ion-segment-button value="All">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="BSIT">
+      <ion-label>BSIT</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="BSCS">
+      <ion-label>BSCS</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="BSEd">
+      <ion-label>BSEd</ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button value="BSBA">
+      <ion-label>BSBA</ion-label>
+    </ion-segment-button>
+
+  </ion-segment>
+
+  <div
+    *ngIf="isLoading"
+    class="ion-text-center ion-padding">
+
+    <ion-spinner name="crescent"></ion-spinner>
+
+    <p>Loading students...</p>
+
+  </div>
+
+  <ion-list
+    *ngIf="!isLoading && filteredStudents.length > 0">
+
+    <ion-item-sliding
+      *ngFor="let student of filteredStudents">
+
+      <ion-item>
+
+        <ion-avatar slot="start">
+          <ion-icon
+            name="person-circle-outline"
+            size="large">
+          </ion-icon>
+        </ion-avatar>
+
+        <ion-label>
+
+          <h2>
+            {{ student.studentName }}
+          </h2>
+
+          <p>
+            Student ID: {{ student.studentId }}
+          </p>
+
+          <p>
+            Email: {{ student.email }}
+          </p>
+
+          <p>
+            Contact: {{ student.contactNumber }}
+          </p>
+
+          <p>
+            {{ student.course }} - {{ student.yearLevel }}
+          </p>
+
+        </ion-label>
+
+        <ion-button
+          fill="outline"
+          color="primary"
+          slot="end"
+          (click)="updateStudent(student)">
+
+          <ion-icon
+            name="create-outline"
+            slot="start">
+          </ion-icon>
+
+          Update
+
+        </ion-button>
+
+      </ion-item>
+
+      <ion-item-options side="end">
+
+        <ion-item-option
+          color="danger"
+          (click)="deleteStudent(student)">
+
+          <ion-icon
+            name="trash-outline"
+            slot="icon-only">
+          </ion-icon>
+
+        </ion-item-option>
+
+      </ion-item-options>
+
+    </ion-item-sliding>
+
+  </ion-list>
+
+  <ion-card
+    *ngIf="!isLoading && filteredStudents.length === 0">
+
+    <ion-card-content class="ion-text-center">
+
+      <ion-icon
+        name="people-outline"
+        size="large">
+      </ion-icon>
+
+      <p>
+        No students found.
+      </p>
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>

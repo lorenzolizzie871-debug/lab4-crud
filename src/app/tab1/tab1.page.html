@@ -1,0 +1,179 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Add Student</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Student Information</ion-card-title>
+
+      <ion-card-subtitle>
+        Enter the student's details
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <form #studentForm="ngForm" (ngSubmit)="addStudent(studentForm)">
+
+        <!-- Student Name -->
+        <ion-item>
+          <ion-icon
+            name="person-outline"
+            slot="start">
+          </ion-icon>
+
+          <ion-input
+            name="studentName"
+            label="Student Name"
+            labelPlacement="floating"
+            type="text"
+            [(ngModel)]="studentName"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Student ID -->
+        <ion-item>
+          <ion-icon
+            name="id-card-outline"
+            slot="start">
+          </ion-icon>
+
+          <ion-input
+            name="studentId"
+            label="Student ID"
+            labelPlacement="floating"
+            type="text"
+            [(ngModel)]="studentId"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Email -->
+        <ion-item>
+          <ion-icon
+            name="mail-outline"
+            slot="start">
+          </ion-icon>
+
+          <ion-input
+            name="email"
+            label="Email"
+            labelPlacement="floating"
+            type="email"
+            [(ngModel)]="email"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Contact Number -->
+        <ion-item>
+          <ion-icon
+            name="call-outline"
+            slot="start">
+          </ion-icon>
+
+          <ion-input
+            name="contactNumber"
+            label="Contact Number"
+            labelPlacement="floating"
+            type="tel"
+            [(ngModel)]="contactNumber"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Course -->
+        <ion-item>
+          <ion-icon
+            name="school-outline"
+            slot="start">
+          </ion-icon>
+
+          <ion-select
+            name="course"
+            label="Course"
+            labelPlacement="floating"
+            placeholder="Select Course"
+            [(ngModel)]="course"
+            required>
+
+            <ion-select-option value="BSIT">
+              BSIT
+            </ion-select-option>
+
+            <ion-select-option value="BSCS">
+              BSCS
+            </ion-select-option>
+
+            <ion-select-option value="BSEd">
+              BSEd
+            </ion-select-option>
+
+            <ion-select-option value="BSBA">
+              BSBA
+            </ion-select-option>
+
+          </ion-select>
+        </ion-item>
+
+        <!-- Year Level -->
+        <ion-item>
+          <ion-icon
+            name="calendar-outline"
+            slot="start">
+          </ion-icon>
+
+          <ion-select
+            name="yearLevel"
+            label="Year Level"
+            labelPlacement="floating"
+            placeholder="Select Year Level"
+            [(ngModel)]="yearLevel"
+            required>
+
+            <ion-select-option value="1st Year">
+              1st Year
+            </ion-select-option>
+
+            <ion-select-option value="2nd Year">
+              2nd Year
+            </ion-select-option>
+
+            <ion-select-option value="3rd Year">
+              3rd Year
+            </ion-select-option>
+
+            <ion-select-option value="4th Year">
+              4th Year
+            </ion-select-option>
+
+          </ion-select>
+        </ion-item>
+
+        <!-- Add Student Button -->
+        <ion-button
+          expand="block"
+          color="primary"
+          class="ion-margin-top"
+          type="submit">
+
+          <ion-icon
+            name="person-add-outline"
+            slot="start">
+          </ion-icon>
+
+          Add Student
+
+        </ion-button>
+
+      </form>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
