@@ -67,25 +67,34 @@ jobs:
       - name: Deploy Updated Container
         run: docker run -d --name ionic-crud --restart unless-stopped -p 8100:8100 ionic-crud:latest
 
+ 
       - name: Verify Deployment
         shell: powershell
         run: |
           $success = $false
 
-          for ($i = 1; $i -le 15; $i++) {
+          Write-Host "Checking Docker application at http://localhost:8100..."
+
+          for ($i = 1; $i -le 60; $i++) {
             try {
-              Invoke-WebRequest http://localhost:8100/ -UseBasicParsing -TimeoutSec 2 | Out-Null
-              $success = $true
-              break
+              $response = Invoke-WebRequest -Uri "http://localhost:8100/" -UseBasicParsing -TimeoutSec 5
+
+              if ($response.StatusCode -eq 200) {
+                $success = $true
+                break
+              }
             }
             catch {
+              Write-Host "Attempt $i/60: Application is not ready yet..."
               Start-Sleep -Seconds 2
             }
           }
 
           if (-not $success) {
-            docker logs ionic-crud
+            Write-Host "Deployment verification failed."
+            docker ps -a
+            docker logs --tail 100 ionic-crud
             exit 1
           }
 
-          Write-Host "Application deployed successfully!"
+          Write-Host "Application deployed and verified successfully!"
