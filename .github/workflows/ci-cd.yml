@@ -1,0 +1,91 @@
+
+name: Lab4 CRUD CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+
+  # CONTINUOUS INTEGRATION
+  continuous-integration:
+    name: Build and Test Application
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test -- --watch=false
+
+      - name: Build Application
+        run: npm run build
+
+  # CONTINUOUS DEPLOYMENT
+  continuous-deployment:
+    name: Deploy Using Docker
+    needs: continuous-integration
+
+    if: github.event_name != 'pull_request'
+
+    runs-on: [self-hosted, Windows, X64]
+
+    steps:
+      - name: Checkout Latest Code
+        uses: actions/checkout@v4
+
+      - name: Verify Docker
+        run: docker info
+
+      - name: Build Docker Image
+        run: docker build -t ionic-crud:latest .
+
+      - name: Remove Previous Container
+        run: docker rm -f ionic-crud
+        continue-on-error: true
+
+      - name: Deploy Updated Container
+        run: docker run -d --name ionic-crud --restart unless-stopped -p 8100:8100 ionic-crud:latest
+
+      - name: Verify Deployment
+        shell: powershell
+        run: |
+          $success = $false
+
+          for ($i = 1; $i -le 15; $i++) {
+            try {
+              Invoke-WebRequest http://localhost:8100/ -UseBasicParsing -TimeoutSec 2 | Out-Null
+              $success = $true
+              break
+            }
+            catch {
+              Start-Sleep -Seconds 2
+            }
+          }
+
+          if (-not $success) {
+            docker logs ionic-crud
+            exit 1
+          }
+
+          Write-Host "Application deployed successfully!"
